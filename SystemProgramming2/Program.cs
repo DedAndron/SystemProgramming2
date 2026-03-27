@@ -1,11 +1,26 @@
 ﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace SystemProgramming2
 {
+    //class Currency
+    //{
+    //    public int r030 { get; set; }
+    //    public string txt { get; set; }
+    //    public decimal rate { get; set; }
+    //    public override string ToString()
+    //    {
+    //        return $"Currency: {txt}| Rate: {rate}";
+    //    }
+    //}
     internal class Program
     {
+        const int N = 20;
         //const int totalcount = 100_000_000;
         //static void TestThread()
         //{
@@ -34,46 +49,187 @@ namespace SystemProgramming2
         //            break;
         //        }
         //    }
-         
+
         //}
-        [DllImport("PointManager.dll")]
-        public static extern IntPtr CreatePointManager();
+        //[DllImport("PointManager.dll")]
+        //public static extern IntPtr CreatePointManager();
 
-        [DllImport("PointManager.dll")]
-        public static extern void DestroyPointManager(IntPtr pm);
+        //[DllImport("PointManager.dll")]
+        //public static extern void DestroyPointManager(IntPtr pm);
 
-        [DllImport("PointManager.dll")]
-        public static extern void PointManager_AddPoint(IntPtr pm, int x, int y);
+        //[DllImport("PointManager.dll")]
+        //public static extern void PointManager_AddPoint(IntPtr pm, int x, int y);
 
-        [DllImport("PointManager.dll")]
-        public static extern void PointManager_RemovePoint(IntPtr pm, int index);
+        //[DllImport("PointManager.dll")]
+        //public static extern void PointManager_RemovePoint(IntPtr pm, int index);
 
-        [DllImport("PointManager.dll")]
-        public static extern void PointManager_GetPoint(IntPtr pm, int index, out int x, out int y);
+        //[DllImport("PointManager.dll")]
+        //public static extern void PointManager_GetPoint(IntPtr pm, int index, out int x, out int y);
 
-        [DllImport("PointManager.dll")]
-        public static extern int PointManager_Count(IntPtr pm);
-        static void Main(string[] args)
+        //[DllImport("PointManager.dll")]
+        //public static extern int PointManager_Count(IntPtr pm);
+        //static async Task<List<Document>> DownloadDocuments ()
+        //{
+        //    var documents = new List<Document>();
+        //    Console.WriteLine("Request received");
+        //    Console.WriteLine("Getting documents...");
+        //    var doc1 = new Document { Name = "Doc" , Number = 1};
+        //    documents.Add(doc1);
+        //    await Task.Delay (1000);
+        //    Console.WriteLine("Getting documents...");
+        //    var doc2 = new Document { Name = "Doc", Number = 2 };
+        //    documents.Add(doc2);
+        //    await Task.Delay(1000);
+        //    Console.WriteLine("Getting documents...");
+        //    var doc3 = new Document { Name = "Doc", Number = 3 };
+        //    documents.Add(doc3);
+        //    await Task.Delay(1000);
+        //    Console.WriteLine("Documents received");
+        //    return documents;
+        //}
+        //private static readonly string _url = "https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json";
+        //static async Task<List<Currency>> GetCurrencyAsync()
+        //{
+        //    using (HttpClient client = new HttpClient())
+        //    {
+        //        try
+        //        {
+        //            var response = await client.GetStringAsync(_url);
+        //            var obj = JsonSerializer.Deserialize<List<Currency>>(response);
+        //            if (obj != null)
+        //            {
+        //                return obj;
+        //            }
+        //        }
+        //        catch (Exception)
+        //        {
+
+        //        }
+        //        return null;
+        //    }
+        //}
+        //static async Task<Pizza> DoPizza()
+        //{
+        //    Console.WriteLine("Receive an order");
+        //    Console.WriteLine("Start cooking");
+        //    await Task.Delay(500);
+        //    Console.WriteLine("Making dough");
+        //    await Task.Delay(1000);
+        //    Console.WriteLine("Making filling");
+        //    Console.WriteLine("Bake pizza");
+        //    return new Pizza { Name = "Margarita", Price = 200 };
+        //}
+        //static async Task<decimal> ConvertationAsync(decimal amount)
+        //{
+        //    var data = await GetCurrencyAsync();
+        //    decimal result = 0;
+        //    if (data != null) {
+        //        foreach (var item in data)
+        //        {
+        //            if (item.r030 == 840)
+        //            {
+        //                result = amount / item.rate;
+        //            }
+        //        }
+        //    }
+        //    return result;
+        //}
+        static void PrintLow()
         {
-            IntPtr pm = CreatePointManager();
-
-            PointManager_AddPoint(pm, 10, 20);
-            PointManager_AddPoint(pm, 30, 40);
-
-            int count = PointManager_Count(pm);
-            Console.WriteLine($"Count: {count}");
-
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < N; i++)
             {
-                PointManager_GetPoint(pm, i, out int x, out int y);
-                Console.WriteLine($"Point {i}: ({x}, {y})");
+                
+                Console.WriteLine("Low");
+                Thread.Sleep(100);
             }
+        }
+        static void PrintMedium()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                
+                Console.WriteLine("Medium");
+                Thread.Sleep(100);
+            }
+        }
+        static void PrintHigh()
+        {
+            for (int i = 0; i < N; i++)
+            {
+                
+                Console.WriteLine("High");
+                Thread.Sleep(100);
+            }
+        }
+        static async Task Main(string[] args)
+        {
+            Thread threadlow = new Thread(PrintLow);
+            Thread threadmedium = new Thread(PrintMedium);
+            Thread threadhigh = new Thread(PrintHigh);
+            threadlow.Priority = ThreadPriority.Highest;
+            threadmedium.Priority = ThreadPriority.Normal;
+            threadhigh.Priority = ThreadPriority.Lowest;
+            threadlow.Start();
+            threadlow.Join();
+            threadmedium.Start();
+            threadmedium.Join();
+            threadhigh.Start();
+            threadhigh.Join();
+            //Console.WriteLine("Enter amount: ");
+            //var t = Console.ReadLine();
+            //decimal amount = decimal.Parse(t);
+            //var result = ConvertationAsync(amount);
+            //Console.WriteLine(result.Result); 
+            //var data = await GetCurrencyAsync();
+            //if (data != null)
+            //{
+            //    foreach (var item in data)
+            //    {
+            //        Console.WriteLine(item);
+            //    }
+            //}
+            //Console.WriteLine();
+            //Console.WriteLine("Making request");
+            //var document = DownloadDocuments ();
+            //for (int i = 0; i < 5; i++)
+            //{
+            //    Console.WriteLine("We are working");
+            //    Thread.Sleep(1000);
+            //}
+            //document.Wait();
+            //Console.WriteLine("Get documents");
+            //foreach (var doc in document.Result)
+            //{
+            //    Console.WriteLine(doc);
+            //}
+            //Console.WriteLine("Making order pizza");
+            //var pizza = DoPizza();
+            //for (int i = 0; i < 10; i++) {
+            //    Console.WriteLine("We are working");
+            //    Thread.Sleep(1000);
+            //}
+            //pizza.Wait();
+            //Console.WriteLine("Get pizza");
+            //Console.WriteLine(pizza.Result);
+            //IntPtr pm = CreatePointManager();
 
-            PointManager_RemovePoint(pm, 0);
+            //PointManager_AddPoint(pm, 10, 20);
+            //PointManager_AddPoint(pm, 30, 40);
 
-            Console.WriteLine($"Count after remove: {PointManager_Count(pm)}");
+            //int count = PointManager_Count(pm);
+            //Console.WriteLine($"Count: {count}");
 
-            DestroyPointManager(pm);
+            //for (int i = 0; i < count; i++)
+            //{
+            //    PointManager_GetPoint(pm, i, out int x, out int y);
+            //    Console.WriteLine($"Point {i}: ({x}, {y})");
+            //}
+
+            //PointManager_RemovePoint(pm, 0);
+
+            //Console.WriteLine($"Count after remove: {PointManager_Count(pm)}");
+
+            //DestroyPointManager(pm);
             //BankAccount account = new BankAccount();
             //account.Replenishment(500);
             //Console.WriteLine(account.Cash);
@@ -140,5 +296,27 @@ namespace SystemProgramming2
 
 
         }
+        //public class Document
+        //{
+        //    public string Name { get; set; }
+        //    public int Number { get; set; }
+        //    public override string ToString()
+        //    {
+        //        return $"Name: {Name} | Number: {Number}";
+        //    }
+        //}
+        //public class Pizza
+        //{
+        //    public string Name { get; set; }
+        //    public int Price { get; set; }
+        //    public override string ToString()
+        //    {
+        //        return $"Name: {Name} | Price: {Price}";
+        //    }
+        //}
+
+
+
+
     }
 }
